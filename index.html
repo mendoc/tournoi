@@ -1,10 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="utf-8">
-    <title>Tournoi de coding</title>
+	<meta charset="utf-8">
+	<title>Questions pour un codeur</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-    <h1>Mbolo Worl!</h1>
+	<div id="app">
+        <div class="visible fenetre" id="fen-splash"><h1>Splashscreen</h1></div>
+        <div class="fenetre" id="fen-menu">
+            <h1>Menu</h1>
+            <ul>
+                <li><a href="?fen=choice">Player</a></li>
+                <li><a href="?fen=flow">Flow</a></li>
+            </ul>
+        </div>
+
+        <div class="fenetre" id="fen-choice">
+            <h1>Player</h1>
+            <a href="?fen=menu">Retour au menu</a>
+            <br><br><hr>
+            <p>Choisissez votre avatar</p>
+            <select name="players">
+                <option value="0">Choisissez votre personnage</option>
+            </select>
+        </div>
+
+        <div class="fenetre" id="fen-players">
+            <h1>Liste des joueurs</h1>
+            <a href="?fen=menu">Retour au menu</a>
+            <br><br><br>
+            <input type="text" name="name" placeholder="Nom du joueur">
+            <input type="number" name="id" placeholder="ID" min="1">
+            <input type="submit" value="Ajouter le joueur">
+            <br><br>
+            <hr>
+            <table id="liste-joueurs">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nom</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="fenetre" id="fen-flow">
+            <h1>Flow</h1>
+            <a href="?fen=menu">Retour au menu</a>
+            <ul>
+                <li><a href="?fen=tournoi">Nouveau Tournoi</a></li>
+                <li><a href="?fen=players">Joueurs</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+	<script src="assets/js/config.js"></script>
+    <script src="assets/js/utils.js"></script>
+	<script src="assets/js/app.js"></script>
 </body>
+
 </html>

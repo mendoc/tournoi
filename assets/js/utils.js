@@ -10,6 +10,12 @@ function listen(path, callback) {
     });
 }
 
+function once(path, callback) {
+    firebase.database().ref(path).once('value', function (snapshot) {
+        callback(snapshot.val());
+    });
+}
+
 function write(path, value) {
     firebase.database().ref(path).set(value);
 }
@@ -30,6 +36,7 @@ function afficherFenetre(name) {
     $(".fenetre").css("display", "none");
     $("#fen-" + name).css("display", "block");
 }
+
 function getFenetre() {
     let parts = location.href.split("?")
     if (parts.length > 1) {
@@ -65,7 +72,7 @@ function loadFenetre(fen) {
                 write(`/tournoi/players/${playerID}`, player)
             });
         }
-        break;
+            break;
         case "choice": {
             let playerKey = getKey();
             listen("/tournoi/players", function (data) {
@@ -83,7 +90,7 @@ function loadFenetre(fen) {
                 write(`/tournoi/duel/players/${playerKey}`, { id: value, name: name })
             });
         }
-        break;
+            break;
         case "config": {
             listen("/tournoi/config", function (config) {
                 if (config) {
@@ -113,19 +120,40 @@ function loadFenetre(fen) {
                 location.href = "?fen=classement"
             });
         }
-        break;
+            break;
         case "classement": {
-            listen("/tournoi/duel/players", function (players) {
+            once("/tournoi/duel/players", function (players) {
                 if (players) {
-                    let n = 1;
+                    let n = 0;
                     $('#fen-classement table tr:first').empty();
+                    let selects = $('#fen-classement select');
                     $.each(players, function (index, player) {
-                        if (n > 4) return;
-                        cons(index)
+                        if (n > 3) return;
+                        selects.eq(n).data("key", index);
+                        selects.eq(n).data("id", player.id);
+                        selects.eq(n).data("name", player.name);
                         $('#fen-classement table tr:first').append(`<td>${player.name}</td>`);
                         n++;
                     });
                 }
+            });
+
+            $('#fen-classement select').change(function () {
+                let player = $(this).data();
+                let path = `/tournoi/duel/players/${player.key}`;
+                player.team = $(this).val();
+                write(path, player)
+            });
+
+            $('#fen-classement [type="button"]').click(function () {
+                let selects = $('#fen-classement select');
+                let ready = true;
+                let control = 0;
+                $.each(selects, function (index, sel) {
+                    control += parseInt($(sel).val());
+                    if ($(sel).val() === "0") ready = false;
+                });
+                if (ready && control == 6) location.href = "?fen=duel"
             });
         }
     }
